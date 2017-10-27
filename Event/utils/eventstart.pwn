@@ -39,7 +39,7 @@ public event_StartCounter(eventid)
 	}
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++)
 	{
-		if(eventp_Joined[i][eventid])
+		if(eventp_JoinedTD[i] != -1)
 		{
 			new string[27];
 			format(string, sizeof(string), "EVENT STARING IN %d SECOND", event_StartTime);
