@@ -1,25 +1,23 @@
-#include <a_samp>
 
-forward eventp_OnPlayerWin(playerid, eventid);
 
-forward event_CheckWinner();
-public event_CheckWinner()
+forward event_CheckWinner(eventid);
+public event_CheckWinner(eventid)
 {
-	for(new i; i<MAX_PLAYERS; i++)
+	if(Event[eventid][event_LeftPlayers] == 1)
 	{
-		if(Event[eventp_JoinedID[i]][event_LeftPlayers] == 1)
+		for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++)
 		{
-			#if defined eventp_OnPlayerWin
-				CallLocalFunction("eventp_OnPlayerWin","dd", i, eventp_JoinedID[i]);
-			#endif
-			Event[eventp_JoinedID[i]][event_Started] = false;
-			Event[eventp_JoinedID[i]][event_PlayerCantJoin] = false;
-			Event[eventp_JoinedID[i]][event_LeftPlayers] = 0;
-			eventp_Joined[i] = false;
-			eventp_Spawned[i] = false;
-			eventp_JoinedID[i] = -1;			
-			SpawnPlayer(i);
-			KillTimer(event_CheckWinerTimer);
+			if(eventp_JoinedID[i][eventid] != -1)
+			{
+				Event[eventid][event_Started] = false;
+				Event[eventid][event_PlayerCantJoin] = false;
+				Event[eventid][event_LeftPlayers] = 0;
+				eventp_Spawned[i] = false;
+				eventp_JoinedID[i][eventid] = -1;			
+				SpawnPlayer(i);
+				KillTimer(event_CheckWinerTimer);
+				break;
+			}
 		}
 	}
 }
