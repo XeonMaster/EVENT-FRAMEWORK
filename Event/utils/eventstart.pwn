@@ -1,53 +1,47 @@
-#include <a_samp>
-
-forward event_Start(eventid, intime);
-forward event_OnStart(eventid, style);
-
-new event_StartTime, event_StartCounterTimer, event_CheckWinerTimer;
-forward event_StartCounter();
+new 
+	event_StartTime[MAX_EVENTS],
+	event_StartCounterTimer[MAX_EVENTS],
+	event_CheckWinerTimer[MAX_EVENTS]
+;
+	
+forward public event_StartCounter(eventid);
 
 stock event_Start(eventid, intime)
 {
 	Event[eventid][event_Started] = true;
-	event_StartTime = intime;
-	#if defined event_OnStart
-		CallLocalFunction("event_OnStart","dd", eventid, Event[eventid][event_Style]);
-	#endif
-	event_StartCounterTimer = SetTimer("event_StartCounter", 1000, true);
+	event_StartTime[eventid] = intime;
+	event_StartCounterTimer[eventid] = SetTimerEx("event_StartCounter", 1000, true, "i", eventid);
 	return 1;
 }
 
-public event_StartCounter()
+public event_StartCounter(eventid)
 {
 	if(event_StartTime == 0)
 	{
-		KillTimer(event_StartCounterTimer);
-		for(new i; i<MAX_PLAYERS;i++)
+		KillTimer(event_StartCounterTimer[eventid]);
+		if(Event[eventid][event_LeftPlayers] == 1)
 		{
-			if(eventp_Joined[i])
-			{
-				if(Event[eventp_JoinedID[i]][event_LeftPlayers] == 1)
-				{
-					SendClientMessage(i, -1, "You were the only one who joined event. Event Canceled");
-					TogglePlayerControllable(i, true);
-					Event[eventp_JoinedID[i]][event_Started] = false;
-					SpawnPlayer(i);
+			SendClientMessageToAll(-1, "Event Canceled, Only 1 player joined.");
+			Event[eventp_JoinedID[eventid]][event_Started] = false;
+			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++) if(eventp_Joined[i][eventid]) SpawnPlayer(i);
 
-				}
-				else
-				{
-					TogglePlayerControllable(i, true);
-					Event[eventp_JoinedID[i]][event_PlayerCantJoin] = true;
-					event_CheckWinerTimer = SetTimer("event_CheckWinner", 100, true);
-				}
+		}
+		else
+		{
+			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++) 
+			{
+				if(!eventp_Joined[i][eventid]) continue;
+				TogglePlayerControllable(i, true);
+				Event[eventp_JoinedID[i]][event_PlayerCantJoin] = true;
+				event_CheckWinerTimer[eventid] = SetTimer("event_CheckWinner", 100, true, "i", eventid);
 			}
 		}
 	}
-	for(new i; i<MAX_PLAYERS;i++)
+	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++)
 	{
-		if(eventp_Joined[i])
+		if(eventp_Joined[i][eventid])
 		{
-			new string[120];
+			new string[27];
 			format(string, sizeof(string), "EVENT STARING IN %d SECOND", event_StartTime);
 			GameTextForPlayer(i, string, 1000, 1);
 		}
