@@ -2,7 +2,7 @@
 
 static stock strmatch(const out1[], const out2[])
 {
-	if((strcmp(out1, out2, true, strlen(out2)) == 0) && (strlen(out2) == strlen(out1))) return true;
+	if((strcmp(out1, out2, false, strlen(out2)) == 0) && (strlen(out2) == strlen(out1))) return true;
 	else return false;
 }	
 
