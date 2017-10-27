@@ -13,7 +13,7 @@ public event_CheckWinner(eventid)
 				Event[eventid][event_PlayerCantJoin] = false;
 				Event[eventid][event_LeftPlayers] = 0;
 				eventp_Spawned[i] = false;
-				eventp_JoinedID[i][eventid] = -1;			
+				eventp_JoinedID[i] = -1;			
 				SpawnPlayer(i);
 				KillTimer(event_CheckWinerTimer[eventid]);
 				break;
