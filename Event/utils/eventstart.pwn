@@ -23,14 +23,14 @@ public event_StartCounter(eventid)
 		{
 			SendClientMessageToAll(-1, "Event Canceled, Only 1 player joined.");
 			Event[eventp_JoinedID[eventid]][event_Started] = false;
-			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++) if(eventp_JoinedTD[i] != -1) SpawnPlayer(i);
+			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++) if(eventp_JoinedID[i] != -1) SpawnPlayer(i);
 
 		}
 		else
 		{
 			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++) 
 			{
-				if(!eventp_JoinedTD[i] == -1) continue;
+				if(!eventp_JoinedID[i] == -1) continue;
 				TogglePlayerControllable(i, true);
 				Event[eventp_JoinedID[i]][event_PlayerCantJoin] = true;
 				event_CheckWinerTimer[eventid] = SetTimer("event_CheckWinner", 100, true, "i", eventid);
@@ -39,12 +39,12 @@ public event_StartCounter(eventid)
 	}
 	for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++)
 	{
-		if(eventp_JoinedTD[i] != -1)
+		if(eventp_JoinedID[i] != -1)
 		{
 			new string[27];
-			format(string, sizeof(string), "EVENT STARING IN %d SECOND", event_StartTime);
+			format(string, sizeof(string), "EVENT STARING IN %d SECOND", event_StartTime[eventid]);
 			GameTextForPlayer(i, string, 1000, 1);
 		}
 	}
-	event_StartTime--;
+	event_StartTime[eventid]--;
 }
