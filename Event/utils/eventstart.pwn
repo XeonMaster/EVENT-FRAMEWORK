@@ -23,14 +23,14 @@ public event_StartCounter(eventid)
 		{
 			SendClientMessageToAll(-1, "Event Canceled, Only 1 player joined.");
 			Event[eventp_JoinedID[eventid]][event_Started] = false;
-			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++) if(eventp_Joined[i][eventid]) SpawnPlayer(i);
+			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++) if(eventp_JoinedTD[i] != -1) SpawnPlayer(i);
 
 		}
 		else
 		{
 			for(new i = 0, j = GetPlayerPoolSize(); i <= j; i++) 
 			{
-				if(!eventp_Joined[i][eventid]) continue;
+				if(!eventp_JoinedTD[i] == -1) continue;
 				TogglePlayerControllable(i, true);
 				Event[eventp_JoinedID[i]][event_PlayerCantJoin] = true;
 				event_CheckWinerTimer[eventid] = SetTimer("event_CheckWinner", 100, true, "i", eventid);
