@@ -15,7 +15,7 @@ public event_CheckWinner(eventid)
 				eventp_Spawned[i] = false;
 				eventp_JoinedID[i][eventid] = -1;			
 				SpawnPlayer(i);
-				KillTimer(event_CheckWinerTimer);
+				KillTimer(event_CheckWinerTimer[eventid]);
 				break;
 			}
 		}
